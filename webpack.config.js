@@ -6,7 +6,7 @@ const config = {
     path: path.resolve(__dirname, 'lib'),
     filename: 'index.js',
     library: '@redux-up/hooks',
-    libraryTarget: 'umd'
+    libraryTarget: 'commonjs'
   },
   module: {
     rules: [
@@ -15,14 +15,14 @@ const config = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          plugins: [
-
-          ],
           presets: [
-
+            "@babel/preset-react",
+            "@babel/preset-env"
           ],
-          cacheDirectory: true,
-          babelrc: true
+          plugins: [
+            "@babel/plugin-proposal-export-default-from",
+            "@babel/plugin-proposal-export-namespace-from",
+          ]
         }
       }
     ]
