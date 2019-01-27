@@ -6,7 +6,7 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
     filename: 'index.js',
     library: '@redux-up/hooks',
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
