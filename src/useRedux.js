@@ -1,7 +1,9 @@
-import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import React from 'react'
 import shallowEqual from './shallowEqual'
 import useStateCallbackFunction from './useStateCallbackFunction'
 import DefaultContext from './context'
+
+const { useContext, useEffect, useRef, useState, useCallback, useMemo } = React
 
 function getStoreFromContextDefault(context){
   const {store} = useContext(context)

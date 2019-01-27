@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import React from 'react'
 
 function useStateFunction(fn) {
-  const [val, setVal] = useState(() => fn)
+  const [val, setVal] = React.useState(() => fn)
   function setFunc(fn) {
     setVal(() => fn)
   }
