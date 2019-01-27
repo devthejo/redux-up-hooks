@@ -1,7 +1,7 @@
-const path = require('path');
+const path = require('path')
 
-const config = {
-  entry: __dirname + '/src/index.js',
+module.exports = {
+  entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     path: path.resolve(__dirname, 'lib'),
     filename: 'index.js',
@@ -22,6 +22,7 @@ const config = {
           plugins: [
             "@babel/plugin-proposal-export-default-from",
             "@babel/plugin-proposal-export-namespace-from",
+            "@babel/plugin-transform-runtime",
           ]
         }
       }
@@ -34,6 +35,4 @@ const config = {
     },
   },
   devtool: 'source-map',
-};
-
-module.exports = config;
+}
