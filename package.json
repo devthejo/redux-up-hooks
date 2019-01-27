@@ -1,6 +1,6 @@
 {
   "name": "@redux-up/hooks",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "bring redux to react hooks",
   "main": "lib/index.js",
   "scripts": {
