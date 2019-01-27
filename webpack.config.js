@@ -3,7 +3,8 @@ const path = require('path');
 const config = {
   entry: __dirname + '/src/index.js',
   output: {
-    filename: 'lib/[name].js',
+    path: path.resolve(__dirname, 'lib'),
+    filename: 'index.js',
     library: '@redux-up/hooks',
     libraryTarget: 'umd'
   },
