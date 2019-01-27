@@ -1,5 +1,4 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
 
 const config = {
   entry: __dirname + '/src/index.js',
@@ -23,7 +22,13 @@ const config = {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
     extensions: ['.js']
   },
-  externals: [nodeExternals()],
+  externals: {
+    react : {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+    },
+  },
 };
 
 module.exports = config;
