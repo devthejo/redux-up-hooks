@@ -62,12 +62,7 @@ function useReduxFactory(options = {}){
           
           const newDerivedState = runMapState()
           if (!shallowEqual(newDerivedState, lastRenderedDerivedState.current)) {
-            
-            // https://github.com/facebookincubator/redux-react-hook/issues/17
-            // https://github.com/ctrlplusb/easy-peasy/blob/master/src/hooks.js
-            setImmediate(()=>{
-              setDerivedState(newDerivedState)
-            })
+            setDerivedState(newDerivedState)
           }
         }
 
