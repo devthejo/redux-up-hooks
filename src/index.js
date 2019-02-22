@@ -1,35 +1,32 @@
-import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import {createContext, useContext, useEffect, useRef, useState, useCallback, useMemo} from 'react'
 import shallowEqual from './shallowEqual'
 import useStateCallbackFunction from './useStateCallbackFunction'
-import StoreContext from './context'
 
 function getStoreFromContextDefault(context){
   const value = useContext(context)
   return value.store || value
 }
 
-function useReduxFactory(options = {}){
-  
+function create(options = {}){
+
   const {
-    context : Context = StoreContext,
+    context : StoreContext = createContext(),
     getStoreFromContext = getStoreFromContextDefault,
   } = options
 
   // From https://github.com/facebookincubator/redux-react-hook/blob/0e9791f028a157ed863cdc7c61836e77e03b0e43/src/index.ts
   // with added support for dependencies
   // and add runtime context option
-  function useMappedState(mapState, dependencies = [], context = Context){
+  function useMappedState(mapState, dependencies = [], context = StoreContext){
     const store = getStoreFromContext(context)
-    
-    const mapStateFactory = () => mapState
+
     const runMapState = () => mapState(store.getState())
-    
+
     const [derivedState, setDerivedState] = useState(runMapState)
 
     // If the store or mapState change, rerun mapState
-    const [prevStore, setPrevStore] = useState(store)
-    
-    const [prevMapState, setPrevMapState] = useState(mapStateFactory)
+    const lastStore = useRef(store)
+    const lastMapState = useRef(mapState)
 
     // We keep lastDerivedState in a ref and update it imperatively
     // after calling setDerivedState so it's always up-to-date.
@@ -44,17 +41,17 @@ function useReduxFactory(options = {}){
         lastDerivedState.current = newDerivedState
       }
     }
-    
-    if (prevStore !== store || prevMapState !== mapState) {
-      setPrevStore(store)
-      setPrevMapState(mapStateFactory)
+
+    if (lastStore.current !== store || lastMapState.current !== mapState) {
+      lastStore.current = store
+      lastMapState.current = mapState
       wrappedSetDerivedState()
     }
 
     useEffect(
       () => {
         let didUnsubscribe = false
-        
+
         // Run the mapState callback and if the result has changed, make the
         // component re-render with the new state.
         const checkForUpdates = () => {
@@ -63,7 +60,7 @@ function useReduxFactory(options = {}){
             // Redux doesn't guarantee unsubscriptions happen until next dispatch.
             return
           }
-          
+
           wrappedSetDerivedState()
         }
 
@@ -87,34 +84,34 @@ function useReduxFactory(options = {}){
     return derivedState
   }
 
-  function useDispatch(context = Context) {
+  function useDispatch(context = StoreContext) {
     const store = getStoreFromContext(context)
     return store.dispatch
   }
-  
-  function useSelector(mapState, dependencies = [], context = Context) {
+
+  function useSelector(mapState, dependencies = [], context = StoreContext) {
     return useMappedState(mapState, dependencies, context)
   }
 
   // API inspired from https://github.com/ctrlplusb/easy-peasy
-  function useStore(mapState, dependencies = [], context = Context) {
+  function useStore(mapState, dependencies = [], context = StoreContext) {
     const [cachedMapState] = useStateCallbackFunction(mapState)
     return useMappedState(cachedMapState, dependencies, context)
   }
 
-  function useAction(mapActions, dependencies = [], context = Context) {
+  function useAction(mapActions, dependencies = [], context = StoreContext) {
     // return mapActions(useDispatch(context))
     // return useMemo(mapActions(useDispatch(context)), dependencies)
     return useCallback(mapActions, dependencies)(useDispatch(context))
   }
-  
+
   function useContextStore(context, mapState, dependencies = []){
     return useStore(mapState, dependencies, context)
   }
   function useContextAction(context, mapActions, dependencies = []){
     return useAction(mapActions, dependencies, context)
   }
-  
+
   return {
     useStore,
     useAction,
@@ -123,11 +120,12 @@ function useReduxFactory(options = {}){
     useSelector,
     useDispatch,
     useMappedState,
+    StoreContext,
   }
 }
 
 
-const useRedux = useReduxFactory()
+const useRedux = create()
 
 const {
   useStore,
@@ -137,6 +135,7 @@ const {
   useSelector,
   useDispatch,
   useMappedState,
+  StoreContext,
 } = useRedux
 
 
@@ -150,6 +149,6 @@ export {
   useSelector,
   useDispatch,
   useMappedState,
-  useReduxFactory,
+  create,
   StoreContext,
 }
