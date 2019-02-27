@@ -1,10 +1,9 @@
-// From https://github.com/reduxjs/react-redux/blob/3e53ff96ed10f71c21346f08823e503df724db35/src/utils/shallowEqual.js
 const hasOwn = Object.prototype.hasOwnProperty
 function is(x, y) {
   if (x === y) {
     return x !== 0 || y !== 0 || 1 / x === 1 / y
   } else {
-    return x !== x && y !== y
+    return false
   }
 }
 function shallowEqual(objA, objB) {
@@ -27,7 +26,7 @@ function shallowEqual(objA, objB) {
   if (keysA.length !== keysB.length) {
     return false
   }
-  
+
   for (let i = 0; i < keysA.length; i++) {
     if (!hasOwn.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
       return false
