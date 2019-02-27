@@ -99,16 +99,14 @@ function create(options = {}){
     return useMappedState(cachedMapState, dependencies, context)
   }
 
-  function useAction(mapActions, dependencies = [], context = StoreContext) {
-    // return mapActions(useDispatch(context))
-    // return useMemo(mapActions(useDispatch(context)), dependencies)
+  function useAction(mapActions, dependencies, context = StoreContext) {
     return useCallback(mapActions, dependencies)(useDispatch(context))
   }
 
   function useContextStore(context, mapState, dependencies = []){
     return useStore(mapState, dependencies, context)
   }
-  function useContextAction(context, mapActions, dependencies = []){
+  function useContextAction(context, mapActions, dependencies){
     return useAction(mapActions, dependencies, context)
   }
 
