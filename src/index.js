@@ -99,8 +99,9 @@ function create(options = {}){
     return useMappedState(cachedMapState, dependencies, context)
   }
 
-  function useAction(mapActions, dependencies, context = StoreContext) {
-    return useCallback(mapActions, dependencies)(useDispatch(context))
+  function useAction(mapActions, dependencies = [], context = StoreContext) {
+    const store = getStoreFromContext(context)
+    return useCallback(mapActions, [store, mapActions, ...dependencies])(store.dispatch)
   }
 
   function useContextStore(context, mapState, dependencies = []){
